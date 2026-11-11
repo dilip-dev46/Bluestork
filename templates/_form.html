@@ -8,19 +8,15 @@
 {% endif %}
 
 {% for f in form %}
-
 <div class="field{% if f.field.widget.input_type == 'checkbox' %} check{% endif %}">
 
     {% if f.field.widget.input_type == 'checkbox' %}
-
         <label>{{ f }} <span>{{ f.label }}</span></label>
 
     {% else %}
-
         {{ f.label_tag }}
 
         {% if f.field.widget.input_type == 'password' %}
-
             <div class="password-wrapper">
                 {{ f }}
 
@@ -30,10 +26,12 @@
                     aria-label="Show password"
                     aria-pressed="false">
 
+                    <!-- Open eye -->
                     <svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M12 5C6.5 5 2 9.5 1 12c1 2.5 5.5 7 11 7s10-4.5 11-7c-1-2.5-5.5-7-11-7Zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10Zm0-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
                     </svg>
 
+                    <!-- Closed eye -->
                     <svg class="eye-closed" viewBox="0 0 24 24" aria-hidden="true">
                         <path d="m3.3 2 18.7 18.7-1.3 1.3-3.1-3.1A12.8 12.8 0 0 1 12 20C6.5 20 2 15.5 1 13c.6-1.5 2.2-3.5 4.5-5L2 3.3 3.3 2ZM12 6c5.5 0 10 4.5 11 7-.5 1.3-1.7 3-3.5 4.4l-3-3A5 5 0 0 0 9.6 7l-1-1A12.6 12.6 0 0 1 12 6Zm0 3a4 4 0 0 1 4 4c0 .4-.1.8-.2 1.2l-5-5C11.2 9.1 11.6 9 12 9Z"/>
                     </svg>
@@ -42,11 +40,8 @@
             </div>
 
         {% else %}
-
             {{ f }}
-
         {% endif %}
-
     {% endif %}
 
     {% if f.help_text %}
@@ -56,7 +51,6 @@
     {{ f.errors }}
 
 </div>
-
 {% endfor %}
 
 
@@ -99,18 +93,25 @@
     fill: currentColor;
 }
 
-.password-toggle .eye-closed {
+/* Password hidden: show closed eye */
+.password-toggle .eye-open {
     display: none;
 }
 
+.password-toggle .eye-closed {
+    display: block;
+}
+
+/* Password visible: show open eye */
 .password-toggle.is-visible .eye-open {
-    display: none;
+    display: block;
 }
 
 .password-toggle.is-visible .eye-closed {
-    display: block;
+    display: none;
 }
 </style>
+
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
