@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Assigner - Bluestork{% endblock %}
+{% block content %}
+<h1>Assigner board</h1>
+<div class="grid cols-3">
+  <div class="card stat"><b>{{ to_assign|length }}</b><span class="muted">To assign</span></div>
+  <div class="card stat"><b>{{ to_pay|length }}</b><span class="muted">Partner payouts due</span></div>
+  <div class="card stat"><b>{{ partner_count }}</b><span class="muted">Partners available</span></div>
+</div>
+<div class="spacer"></div>
+
+<h2>Paid parcels waiting for a partner</h2>
+{% for p, cands in to_assign %}
+  <div class="card" style="margin-bottom:12px">
+    <div class="row between"><span class="muted">{{ p.code }} &middot; paid {{ p.paid_at|date:"d M, h:i A" }}</span><a href="{% url 'parcel_detail' p.code %}">Details</a></div>
+    <div class="route">{{ p.pickup_district }} &rarr; {{ p.drop_district }}</div>
+    <div class="muted">{{ p.weight_kg }} kg &middot; {{ p.description }} &middot; partner share &#8377;{{ p.partner_payout }}</div>
+    {% include "_assign_form.html" %}
+  </div>
+{% empty %}<div class="card muted">Nothing waiting. New paid parcels appear here.</div>{% endfor %}
+
+{% if assigned %}
+<div class="spacer"></div>
+<h2>Waiting for partner to accept</h2>
+{% for p, cands in assigned %}
+  <div class="card" style="margin-bottom:12px">
+    <div class="row between"><span class="muted">{{ p.code }}</span><span class="badge">{{ p.partner.first_name|default:p.partner.username }}</span></div>
+    <div class="route">{{ p.pickup_district }} &rarr; {{ p.drop_district }}</div>
+    {% include "_assign_form.html" with label="Reassign" %}
+  </div>
+{% endfor %}
+{% endif %}
+
+<div class="spacer"></div>
+<h2>On the road</h2>
+{% if active %}<div class="grid cols-2">{% for p in active %}{% include "_parcel_card.html" %}{% endfor %}</div>
+{% else %}<div class="card muted">No parcels in progress.</div>{% endif %}
+
+<div class="spacer"></div>
+<h2>Delivered - pay the partner</h2>
+{% for p in to_pay %}
+  <div class="card row between" style="margin-bottom:12px">
+    <div><a href="{% url 'parcel_detail' p.code %}"><b>{{ p.code }}</b></a><br>
+      <span class="muted">{{ p.pickup_district }} &rarr; {{ p.drop_district }} &middot; {{ p.partner.first_name|default:p.partner.username }}</span></div>
+    <form method="post" action="{% url 'payout' p.code %}">{% csrf_token %}<button class="btn" type="submit">Pay &#8377;{{ p.partner_payout }}</button></form>
+  </div>
+{% empty %}<div class="card muted">No payouts due.</div>{% endfor %}
+
+{% if completed %}
+<div class="spacer"></div>
+<h2>Recently completed</h2>
+<div class="grid cols-2">{% for p in completed %}{% include "_parcel_card.html" %}{% endfor %}</div>
+{% endif %}
+{% endblock %}

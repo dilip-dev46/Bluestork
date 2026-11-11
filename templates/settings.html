@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Settings - Bluestork{% endblock %}
+
+{% block content %}
+
+<h1>Settings</h1>
+
+<div class="card">
+    <h2>Theme preferences</h2>
+
+    <p class="muted">Saved on this device.</p>
+
+    <div class="grid">
+
+        <button type="button" class="theme-opt" data-theme-pick="light">
+            <span class="swatch" style="background:#f3f6fb"></span>
+            Light
+        </button>
+
+        <button type="button" class="theme-opt" data-theme-pick="dark">
+            <span class="swatch" style="background:#0b1220"></span>
+            Dark
+        </button>
+
+        <button type="button" class="theme-opt" data-theme-pick="ocean">
+            <span class="swatch" style="background:#0d9488"></span>
+            Ocean
+        </button>
+
+    </div>
+</div>
+
+{% endblock %}

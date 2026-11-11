@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Pay - Bluestork{% endblock %}
+{% block content %}
+<div class="card" style="max-width:480px;margin:0 auto">
+  <h1>Pay Bluestork</h1>
+  <p class="muted">Demo mode: no real money is charged.</p>
+  <dl class="kv">
+    <dt>Parcel</dt><dd>{{ p.code }}</dd>
+    <dt>Route</dt><dd>{{ p.pickup_district }} &rarr; {{ p.drop_district }} ({{ p.distance_km }} km)</dd>
+    <dt>Weight</dt><dd>{{ p.weight_kg }} kg</dd>
+    <dt>Amount</dt><dd class="price">&#8377;{{ p.price }}</dd>
+  </dl>
+  <div class="spacer"></div>
+  <form method="post">{% csrf_token %}
+    <div class="field"><label for="method">Payment method (simulated)</label>
+      <select id="method" name="method"><option>UPI</option><option>Debit / Credit card</option><option>Net banking</option></select>
+    </div>
+    <button class="btn block" type="submit">Pay &#8377;{{ p.price }}</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+
+{% block title %}Support Ticket #{{ ticket.id }} - Bluestork{% endblock %}
+
+{% block content %}
+
+<style>
+.ticket-detail-container {
+    max-width: 850px;
+    margin: 25px auto;
+    padding: 16px;
+    color: var(--text, #17345c);
+    min-width: 0;
+}
+
+.ticket-detail-card {
+    background: var(--card, #ffffff);
+    border: 1px solid var(--border, #dce8f5);
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 20px;
+    min-width: 0;
+}
+
+.ticket-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.ticket-detail-header h1 {
+    font-size: clamp(22px, 5vw, 30px);
+    margin: 0;
+}
+
+.ticket-detail-status {
+    display: inline-block;
+    background: #eaf4ff;
+    color: #176bc1;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.ticket-detail-field {
+    margin-bottom: 20px;
+    min-width: 0;
+}
+
+.ticket-detail-field h3 {
+    font-size: 14px;
+    color: var(--muted, #64748b);
+    margin-bottom: 7px;
+}
+
+.ticket-detail-field p {
+    margin: 0;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+.ticket-description {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.ticket-attachment {
+    max-width: 100%;
+    max-height: 400px;
+    width: auto;
+    height: auto;
+    border-radius: 12px;
+    border: 1px solid var(--border, #dce8f5);
+    object-fit: contain;
+}
+
+.ticket-admin-response {
+    background: #eef6ff;
+    border: 1px solid #d5e8ff;
+    border-radius: 12px;
+    padding: 20px;
+    color: #17345c;
+}
+
+.ticket-admin-response h2 {
+    font-size: 19px;
+    margin-bottom: 12px;
+}
+
+.ticket-admin-response p {
+    line-height: 1.7;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.ticket-back-link {
+    display: inline-block;
+    color: #176bc1;
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.ticket-back-link:hover {
+    text-decoration: underline;
+}
+
+.ticket-muted {
+    color: var(--muted, #64748b);
+}
+
+@media (max-width: 600px) {
+    .ticket-detail-container {
+        padding: 10px;
+        margin-top: 12px;
+    }
+
+    .ticket-detail-card {
+        padding: 17px;
+        border-radius: 12px;
+    }
+
+    .ticket-admin-response {
+        padding: 15px;
+    }
+
+    .ticket-detail-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+</style>
+
+
+<div class="ticket-detail-container">
+
+    <a href="{% url 'support:my_tickets' %}" class="ticket-back-link">
+        ← Back to My Tickets
+    </a>
+
+    <!-- TICKET INFORMATION -->
+    <div class="ticket-detail-card">
+
+        <div class="ticket-detail-header">
+
+            <h1>Support Ticket #{{ ticket.id }}</h1>
+
+            <span class="ticket-detail-status">
+                {{ ticket.get_status_display }}
+            </span>
+
+        </div>
+
+
+        <div class="ticket-detail-field">
+            <h3>Issue Title</h3>
+            <p>{{ ticket.subject }}</p>
+        </div>
+
+
+        <div class="ticket-detail-field">
+            <h3>Category</h3>
+            <p>{{ ticket.get_category_display }}</p>
+        </div>
+
+
+        <div class="ticket-detail-field">
+            <h3>Submitted On</h3>
+            <p>{{ ticket.created_at|date:"d M Y, h:i A" }}</p>
+        </div>
+
+
+        <div class="ticket-detail-field">
+            <h3>Last Updated</h3>
+            <p>{{ ticket.updated_at|date:"d M Y, h:i A" }}</p>
+        </div>
+
+
+        <div class="ticket-detail-field">
+            <h3>Issue Description</h3>
+
+            <p class="ticket-description">{{ ticket.description }}</p>
+        </div>
+
+
+        <!-- UPLOADED IMAGE -->
+        {% if ticket.attachment %}
+
+        <div class="ticket-detail-field">
+
+            <h3>Attached Picture</h3>
+
+            <a
+                href="{{ ticket.attachment.url }}"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                <img
+                    src="{{ ticket.attachment.url }}"
+                    alt="Support ticket attachment"
+                    class="ticket-attachment"
+                    loading="lazy"
+                >
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- ADMIN RESPONSE -->
+    <div class="ticket-detail-card">
+
+        <h2>Response from Bluestork Support</h2>
+
+        {% if ticket.admin_response %}
+
+            <div class="ticket-admin-response">
+
+                <h2>Support Team Response</h2>
+
+                <p>{{ ticket.admin_response }}</p>
+
+            </div>
+
+        {% else %}
+
+            <p class="ticket-muted">
+                Our support team hasn't responded yet.
+                Please check back later for updates.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

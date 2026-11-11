@@ -1,0 +1,29 @@
+{% load static %}<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1668e3">
+  <title>Bluestork - Send parcels across Tamil Nadu</title>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body class="landing">
+  <div class="wrap">
+    <div class="logo">Blue<b>stork</b></div>
+    <h1>Send parcels to your loveable person.<br>Earn while you travel.</h1>
+    <p class="sub">Bluestork connects people sending parcels with people already travelling between districts.</p>
+    <div class="chips">
+      <span class="chip">&#128205; Live tracking</span>
+      <span class="chip">&#128274; OTP-verified handover</span>
+      <span class="chip">&#129534; Downloadable bills</span>
+    </div>
+    <a class="go" href="{% url 'home' %}">Get started &rarr;</a>
+    <div class="roles">
+      <a href="{% url 'customer_dashboard' %}">Customer</a>
+      <a href="{% url 'partner_dashboard' %}">Pickup Partner</a>
+      <a href="{% url 'assigner_dashboard' %}">Assigner</a>
+    </div>
+  </div>
+  <div class="foot">license owned by &middot; Bluestork</div>
+</body>
+</html>

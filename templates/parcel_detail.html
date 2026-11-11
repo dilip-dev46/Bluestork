@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% block title %}{{ p.code }} - Bluestork{% endblock %}
+{% block head %}<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">{% endblock %}
+{% block content %}
+<div class="row between">
+  <div><div class="muted">Parcel {{ p.code }}</div><h1>{{ p.pickup_district }} &rarr; {{ p.drop_district }}</h1></div>
+  <span class="badge {{ p.status }}" id="status-badge">{{ p.get_status_display }}</span>
+</div>
+
+<div class="grid cols-2">
+  <div class="card">
+    <h2>Status</h2>
+    <ul class="steps">{% for s in p.timeline %}<li class="{% if s.done %}done{% elif s.current %}current{% endif %}">{{ s.label }}</li>{% endfor %}</ul>
+  </div>
+
+  <div class="card">
+    <h2>Details</h2>
+    <dl class="kv">
+      <dt>Pickup</dt><dd>{{ p.pickup_address }}</dd>
+      <dt>Drop</dt><dd>{{ p.drop_address }}</dd>
+      <dt>Receiver</dt><dd>{{ p.receiver_name }} &middot; {{ p.receiver_phone }}</dd>
+      <dt>Parcel</dt><dd>{{ p.description }} ({{ p.get_size_display }}, {{ p.weight_kg }} kg)</dd>
+      <dt>Distance</dt><dd>{{ p.distance_km }} km</dd>
+      {% if role != 'partner' %}<dt>Fare paid</dt><dd>&#8377;{{ p.price }}</dd>{% endif %}
+      {% if role != 'customer' %}<dt>Partner share</dt><dd>&#8377;{{ p.partner_payout }}</dd>{% endif %}
+      {% if role != 'customer' and p.partner %}<dt>Partner</dt><dd>{{ p.partner.first_name|default:p.partner.username }}{% if p.partner.profile.vehicle_number %} &middot; {{ p.partner.profile.vehicle_number }}{% endif %}</dd>{% endif %}
+      {% if role == 'customer' and p.partner %}<dt>Partner</dt><dd>{{ p.partner.first_name|default:p.partner.username }}{% if p.partner.profile.vehicle_number %} &middot; {{ p.partner.profile.vehicle_number }}{% endif %}</dd>{% endif %}
+    </dl>
+  </div>
+</div>
+
+<div class="spacer"></div>
+
+{# ---------------- customer actions ---------------- #}
+{% if role == 'customer' %}
+  {% if p.status == 'created' %}
+    <a class="btn block" href="{% url 'pay' p.code %}">Pay &#8377;{{ p.price }}</a>
+  {% else %}
+    <div class="grid cols-2">
+      <div class="card">
+        <h2>Handover OTPs</h2>
+        <p class="muted">Give the <b>pickup OTP</b> to the partner when they collect the parcel. Give the <b>delivery OTP</b> to the receiver &mdash; they share it with the partner on delivery.</p>
+        <div class="row"><div><div class="muted">Pickup OTP</div><span class="otp">{{ p.pickup_otp }}</span></div>
+        <div><div class="muted">Delivery OTP</div><span class="otp">{{ p.delivery_otp }}</span></div></div>
+      </div>
+      <div class="card">
+        <h2>Invoice</h2>
+        <p class="muted">Paid &#8377;{{ p.price }} on {{ p.paid_at|date:"d M Y, h:i A" }} &middot; {{ p.txn_id }}</p>
+        <a class="btn" href="{% url 'invoice' p.code %}">&#11015; Download invoice (PDF)</a>
+      </div>
+    </div>
+  {% endif %}
+{% endif %}
+
+{# ---------------- partner actions ---------------- #}
+{% if role == 'partner' %}
+  {% if p.status == 'assigned' %}
+    <div class="card"><h2>New job for you</h2><p>Earn <b>&#8377;{{ p.partner_payout }}</b> for this delivery.</p>
+      <div class="row">
+        <form method="post" action="{% url 'respond' p.code %}">{% csrf_token %}<input type="hidden" name="action" value="accept"><button class="btn" type="submit">Accept</button></form>
+        <form method="post" action="{% url 'respond' p.code %}">{% csrf_token %}<input type="hidden" name="action" value="reject"><button class="btn ghost" type="submit">Reject</button></form>
+      </div></div>
+  {% elif p.status == 'accepted' %}
+    <div class="card"><h2>Pickup verification</h2><p class="muted">Ask the customer for the 6-digit pickup OTP.</p>
+      <form method="post" action="{% url 'pickup' p.code %}">{% csrf_token %}
+        <div class="field"><input type="text" name="otp" inputmode="numeric" maxlength="6" placeholder="Pickup OTP" required></div>
+        <button class="btn block" type="submit">Verify &amp; start trip</button></form></div>
+  {% elif p.status == 'in_transit' %}
+    <div class="card"><h2>Delivery verification</h2><p class="muted">Ask the receiver for the 6-digit delivery OTP.</p>
+      <form method="post" action="{% url 'deliver' p.code %}">{% csrf_token %}
+        <div class="field"><input type="text" name="otp" inputmode="numeric" maxlength="6" placeholder="Delivery OTP" required></div>
+        <button class="btn block" type="submit">Verify &amp; complete delivery</button></form></div>
+    <div class="spacer"></div>
+    <div class="card"><h2>Share location</h2>
+      <p class="muted">Customers and the assigner see you on the map. Phones only allow real GPS on HTTPS or localhost, so a demo mode is included.</p>
+      <div class="row"><button class="btn small" type="button" id="btn-gps">Share my live GPS</button>
+      <button class="btn small ghost" type="button" id="btn-sim">Simulate trip (demo)</button>
+      <span class="muted" id="share-state"></span></div></div>
+  {% elif p.status == 'delivered' %}
+    <div class="card"><h2>Delivered</h2><p>Waiting for the assigner to pay your share of &#8377;{{ p.partner_payout }}.</p></div>
+  {% elif p.status == 'partner_paid' %}
+    <div class="card"><h2>You were paid &#8377;{{ p.partner_payout }}</h2><p class="muted">Ref {{ p.payout_ref }}</p>
+      <a class="btn" href="{% url 'payout_slip' p.code %}">&#11015; Download payout slip (PDF)</a></div>
+  {% endif %}
+{% endif %}
+
+{# ---------------- assigner actions ---------------- #}
+{% if role == 'assigner' %}
+  <div class="card row between">
+    <div>Open the <a href="{% url 'assigner_dashboard' %}">assigner board</a> to assign or pay partners.</div>
+    <div class="row">
+      {% if p.paid_at %}<a class="btn small ghost" href="{% url 'invoice' p.code %}">Invoice</a>{% endif %}
+      {% if p.status == 'partner_paid' %}<a class="btn small ghost" href="{% url 'payout_slip' p.code %}">Payout slip</a>{% endif %}
+    </div>
+  </div>
+{% endif %}
+
+<div class="spacer"></div>
+<div class="card">
+  <div class="row between"><h2>Live map</h2><span class="muted" id="map-note"></span></div>
+  <div id="map"></div>
+</div>
+{{ map_data|json_script:"map-data" }}
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script>
+(function () {
+  var D = JSON.parse(document.getElementById("map-data").textContent);
+  var csrf = document.querySelector('meta[name="csrf"]').content;
+  var map = L.map("map").setView([D.pickup.lat, D.pickup.lng], 8);
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18, attribution: "&copy; OpenStreetMap" }).addTo(map);
+  var a = [D.pickup.lat, D.pickup.lng], b = [D.drop.lat, D.drop.lng];
+  L.marker(a).addTo(map).bindPopup("Pickup: " + D.pickup.name);
+  L.marker(b).addTo(map).bindPopup("Drop: " + D.drop.name);
+  L.polyline([a, b], { color: "#1668e3", dashArray: "6 8" }).addTo(map);
+  map.fitBounds([a, b], { padding: [40, 40] });
+  var carrier = null;
+  function showCarrier(pt, label) {
+    if (!pt) return;
+    var ll = [pt.lat, pt.lng];
+    if (!carrier) carrier = L.circleMarker(ll, { radius: 9, color: "#fff", weight: 3, fillColor: "#e11d48", fillOpacity: 1 }).addTo(map).bindPopup("Parcel / partner");
+    else carrier.setLatLng(ll);
+    if (label) document.getElementById("map-note").textContent = label;
+  }
+  showCarrier(D.last, D.last ? "Last seen position" : "");
+  if (!D.last && D.status !== "in_transit") document.getElementById("map-note").textContent = "Live position appears once the trip starts";
+
+  function poll() {
+    fetch("{% url 'location' p.code %}").then(function (r) { return r.json(); }).then(function (j) {
+      document.getElementById("status-badge").textContent = j.status_label;
+      if (j.last) showCarrier(j.last, "Updated " + j.last.at);
+    }).catch(function () {});
+  }
+  if (D.status === "accepted" || D.status === "in_transit") setInterval(poll, 7000);
+
+  // ---- partner location sharing ----
+  function send(lat, lng) {
+    var fd = new FormData(); fd.append("lat", lat); fd.append("lng", lng);
+    return fetch("{% url 'ping' p.code %}", { method: "POST", body: fd, headers: { "X-CSRFToken": csrf } });
+  }
+  var state = document.getElementById("share-state");
+  var gps = document.getElementById("btn-gps"), sim = document.getElementById("btn-sim");
+  if (gps) gps.addEventListener("click", function () {
+    if (!navigator.geolocation) { state.textContent = "GPS not supported here."; return; }
+    var last = 0;
+    navigator.geolocation.watchPosition(function (pos) {
+      var now = Date.now(); if (now - last < 8000) return; last = now;
+      send(pos.coords.latitude, pos.coords.longitude); showCarrier({ lat: pos.coords.latitude, lng: pos.coords.longitude }, "Sharing live GPS");
+      state.textContent = "Sharing live GPS...";
+    }, function (err) { state.textContent = "GPS blocked: " + err.message + ". Use the demo mode instead."; }, { enableHighAccuracy: true });
+  });
+  if (sim) sim.addEventListener("click", function () {
+    var t = 0; sim.disabled = true; state.textContent = "Simulating trip...";
+    var timer = setInterval(function () {
+      t = Math.min(1, t + 0.05);
+      var lat = a[0] + (b[0] - a[0]) * t, lng = a[1] + (b[1] - a[1]) * t;
+      send(lat, lng); showCarrier({ lat: lat, lng: lng }, "Simulated position " + Math.round(t * 100) + "%");
+      if (t >= 1) { clearInterval(timer); state.textContent = "Reached the drop point. Enter the delivery OTP above."; sim.disabled = false; }
+    }, 1500);
+  });
+})();
+</script>
+{% endblock %}

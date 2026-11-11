@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <h1>Bluestork</h1>
+  <p>Send a parcel between Tamil Nadu districts with people who are already travelling that way. Or earn by carrying one.</p>
+  <a class="btn" href="{% url 'customer_dashboard' %}">Send a parcel</a>
+</section>
+<div class="spacer"></div>
+<h2>How it works</h2>
+<div class="grid cols-3">
+  <div class="card"><h3>1. Customer pays</h3><p class="muted">Create a parcel order and pay Bluestork. Download your invoice anytime.</p></div>
+  <div class="card"><h3>2. Assigner matches</h3><p class="muted">The parcel assigner picks an available pickup partner whose route fits.</p></div>
+  <div class="card"><h3>3. Partner delivers</h3><p class="muted">Pickup and delivery are verified with OTPs. Track it live on the map.</p></div>
+</div>
+<div class="spacer"></div>
+<h2>Log in as</h2>
+<div class="grid cols-3">
+  <a class="card link" href="{% url 'customer_dashboard' %}"><h3>&#128230; Customer</h3><p class="muted">Send and track parcels</p></a>
+  <a class="card link" href="{% url 'partner_dashboard' %}"><h3>&#128666; Pickup Partner</h3><p class="muted">Deliver and earn</p></a>
+  <a class="card link" href="{% url 'assigner_dashboard' %}"><h3>&#128203; Assigner</h3><p class="muted">Assign parcels to partners</p></a>
+</div>
+{% endblock %}

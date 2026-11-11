@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}{{ role_label }} sign up - Bluestork{% endblock %}
+{% block content %}
+<div class="card" style="max-width:480px;margin:0 auto">
+  <h1>{{ role_label }} sign up</h1>
+  <form method="post">{% csrf_token %}
+    {% include "_form.html" %}
+    <button class="btn block" type="submit">Create account</button>
+  </form>
+  <p style="margin-top:14px">Already have an ID? <a href="{% if role == 'customer' %}{% url 'customer_login' %}{% else %}{% url 'partner_login' %}{% endif %}">Log in</a></p>
+</div>
+{% endblock %}

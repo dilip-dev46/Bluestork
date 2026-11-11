@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Partner - Bluestork{% endblock %}
+{% block content %}
+<h1>Hello, {{ user.first_name|default:user.username }}</h1>
+<div class="grid cols-3">
+  <div class="card stat"><b>&#8377;{{ earned }}</b><span class="muted">Earned</span></div>
+  <div class="card stat"><b>&#8377;{{ pending }}</b><span class="muted">Awaiting payout</span></div>
+  <div class="card stat"><b>{% if profile.is_available %}Online{% else %}Offline{% endif %}</b><span class="muted">Status</span></div>
+</div>
+<div class="spacer"></div>
+
+{% if new_jobs %}
+<h2>New jobs for you</h2>
+<div class="grid cols-2">{% for p in new_jobs %}{% include "_parcel_card.html" with show_payout=True %}{% endfor %}</div>
+<div class="spacer"></div>
+{% endif %}
+
+<h2>Active deliveries</h2>
+{% if active_jobs %}<div class="grid cols-2">{% for p in active_jobs %}{% include "_parcel_card.html" with show_payout=True %}{% endfor %}</div>
+{% else %}<div class="card muted">No active deliveries.</div>{% endif %}
+<div class="spacer"></div>
+
+<div class="grid cols-2">
+  <div class="card">
+    <h2>My routes</h2>
+    <p class="muted">Add the trips you will make so the assigner can match parcels to you.</p>
+    {% for r in routes %}
+      <div class="row between" style="padding:6px 0;border-bottom:1px solid var(--border)">
+        <span><b>{{ r.from_district }} &rarr; {{ r.to_district }}</b><br><span class="muted">{{ r.travel_date|date:"d M Y" }}</span></span>
+        <form method="post" action="{% url 'route_delete' r.pk %}">{% csrf_token %}<button class="btn small ghost" type="submit">Remove</button></form>
+      </div>
+    {% empty %}<p class="muted">No routes yet.</p>{% endfor %}
+    <div class="spacer"></div>
+    <form method="post" action="{% url 'route_add' %}">{% csrf_token %}
+      {% include "_form.html" with form=route_form %}
+      <button class="btn block" type="submit">Add route</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>My profile</h2>
+    <form method="post" action="{% url 'partner_profile' %}">{% csrf_token %}
+      {% include "_form.html" with form=profile_form %}
+      <button class="btn block" type="submit">Save</button>
+    </form>
+  </div>
+</div>
+
+{% if done_jobs %}
+<div class="spacer"></div>
+<h2>Completed</h2>
+<div class="grid cols-2">{% for p in done_jobs %}{% include "_parcel_card.html" with show_payout=True %}{% endfor %}</div>
+{% endif %}
+{% endblock %}

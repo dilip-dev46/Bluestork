@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+
+{% block title %}Notifications | Bluestork{% endblock %}
+
+{% block content %}
+
+<div class="notification-page">
+
+    <div class="notification-header">
+        <div>
+            <h1>Notifications</h1>
+            <p class="muted">Stay updated with your Bluestork activity.</p>
+        </div>
+
+        <button
+            id="mark-all-read"
+            class="notification-mark-btn"
+            data-url="{% url 'notifications:mark_all_read' %}"
+            type="button">
+            Mark all as read
+        </button>
+    </div>
+
+    <div class="notification-card">
+
+        {% for notification in notifications %}
+
+        <div
+            class="notification-item {% if not notification.is_read %}unread{% endif %}"
+            data-url="{% url 'notifications:mark_read' notification.id %}"
+            role="button"
+            tabindex="0">
+
+            <div class="notification-dot"></div>
+
+            <div class="notification-content">
+                <h3>{{ notification.title }}</h3>
+
+                <p>{{ notification.message }}</p>
+
+                <small>
+                    {{ notification.created_at|date:"d M Y, h:i A" }}
+                </small>
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="notification-empty">
+            <h3>No notifications yet</h3>
+            <p class="muted">We'll notify you when something happens.</p>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<style>
+.notification-page {
+    max-width: 850px;
+    margin: 20px auto;
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.notification-mark-btn {
+    padding: 10px 15px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--soft);
+    color: var(--text);
+    cursor: pointer;
+}
+
+.notification-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.notification-item {
+    display: flex;
+    gap: 14px;
+    padding: 18px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-item.unread {
+    background: var(--soft);
+}
+
+.notification-dot {
+    width: 10px;
+    height: 10px;
+    min-width: 10px;
+    margin-top: 6px;
+    border-radius: 50%;
+    background: transparent;
+}
+
+.notification-item.unread .notification-dot {
+    background: var(--primary);
+}
+
+.notification-content h3 {
+    margin: 0 0 6px;
+    color: var(--text);
+    font-size: 16px;
+}
+
+.notification-content p {
+    margin: 0 0 8px;
+    color: var(--muted);
+}
+
+.notification-content small {
+    color: var(--muted);
+}
+
+.notification-empty {
+    padding: 45px 20px;
+    text-align: center;
+}
+
+@media(max-width:600px) {
+    .notification-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .notification-item {
+        padding: 14px;
+    }
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    function getCookie(name) {
+        let cookieValue = null;
+
+        if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+
+                if (cookie.startsWith(name + "=")) {
+                    cookieValue = decodeURIComponent(
+                        cookie.substring(name.length + 1)
+                    );
+                    break;
+                }
+            }
+        }
+
+        return cookieValue;
+    }
+
+    const csrfToken = getCookie("csrftoken");
+
+    async function sendPost(url) {
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrfToken,
+                "X-Requested-With": "XMLHttpRequest"
+            },
+            credentials: "same-origin"
+        });
+
+        if (!response.ok) {
+            throw new Error("Could not update notification.");
+        }
+
+        return response.json();
+    }
+
+    // Mark one notification as read
+    document.querySelectorAll(".notification-item[data-url]").forEach(item => {
+
+        async function markRead() {
+            if (!item.classList.contains("unread")) return;
+
+            try {
+                await sendPost(item.dataset.url);
+
+                item.classList.remove("unread");
+
+            } catch (error) {
+                console.error(error);
+                alert("Could not mark notification as read.");
+            }
+        }
+
+        item.addEventListener("click", markRead);
+
+        item.addEventListener("keydown", function (event) {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                markRead();
+            }
+        });
+    });
+
+    // Mark all notifications as read
+    const markAllButton = document.getElementById("mark-all-read");
+
+    if (markAllButton) {
+        markAllButton.addEventListener("click", async function () {
+
+            try {
+                await sendPost(markAllButton.dataset.url);
+
+                document.querySelectorAll(".notification-item").forEach(item => {
+                    item.classList.remove("unread");
+                });
+
+            } catch (error) {
+                console.error(error);
+                alert("Could not mark all notifications as read.");
+            }
+        });
+    }
+
+});
+</script>
+
+{% endblock %}

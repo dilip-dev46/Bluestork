@@ -1,0 +1,121 @@
+/* PROFILE PAGE */
+
+.profile-page {
+    max-width: 750px;
+    margin: 30px auto;
+    padding: 15px;
+}
+
+.profile-heading {
+    margin-bottom: 25px;
+}
+
+.profile-heading h1 {
+    color: #0756a5;
+    margin-bottom: 5px;
+}
+
+.profile-heading p {
+    color: #64748b;
+}
+
+.profile-card {
+    background: #ffffff;
+    border: 1px solid #dbeafe;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 5px 20px rgba(0, 75, 150, 0.07);
+}
+
+.profile-card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-bottom: 20px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #e5efff;
+}
+
+.profile-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #0756a5;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.profile-card-header h2 {
+    color: #0756a5;
+    margin: 0 0 5px;
+}
+
+.profile-role {
+    color: #2563eb;
+    font-size: 13px;
+}
+
+.profile-card h3 {
+    color: #0756a5;
+    margin: 25px 0 15px;
+}
+
+.profile-card .form-group {
+    margin-bottom: 18px;
+}
+
+.profile-card label {
+    display: block;
+    margin-bottom: 7px;
+    color: #1e3a8a;
+    font-weight: 600;
+}
+
+.profile-card input,
+.profile-card select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    background: white;
+    color: #1e293b;
+    box-sizing: border-box;
+}
+
+.profile-card input:focus,
+.profile-card select:focus {
+    outline: none;
+    border-color: #0756a5;
+}
+
+.profile-save-btn {
+    width: 100%;
+    padding: 13px;
+    background: #0756a5;
+    color: white;
+    border: none;
+    border-radius: 9px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.profile-save-btn:hover {
+    background: #064481;
+}
+
+.field-error {
+    display: block;
+    color: #0756a5;
+    margin-top: 5px;
+}
+
+@media (max-width: 600px) {
+    .profile-card {
+        padding: 18px;
+    }
+}

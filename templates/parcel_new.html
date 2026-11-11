@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}New parcel - Bluestork{% endblock %}
+{% block content %}
+<h1>New parcel</h1>
+<div class="card" style="max-width:560px;margin:0 auto">
+  <form method="post">{% csrf_token %}
+    {% include "_form.html" %}
+    <div class="card" style="background:var(--soft);margin-bottom:12px" id="quote-box">
+      <div class="muted">Estimated fare</div>
+      <div class="price" id="quote">Choose districts and weight</div>
+    </div>
+    <button class="btn block" type="submit">Continue to payment</button>
+  </form>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  var f = function (n) { return document.getElementById("id_" + n); };
+  var out = document.getElementById("quote");
+  function update() {
+    var p = f("pickup_district").value, d = f("drop_district").value, w = f("weight_kg").value;
+    if (!p || !d || !w) return;
+    fetch("{% url 'quote' %}?pickup=" + encodeURIComponent(p) + "&drop=" + encodeURIComponent(d) + "&weight=" + encodeURIComponent(w))
+      .then(function (r) { return r.json(); })
+      .then(function (j) { out.textContent = j.ok ? "\u20B9" + j.price + "  (" + j.km + " km)" : "Choose different districts and a valid weight"; });
+  }
+  ["pickup_district", "drop_district", "weight_kg"].forEach(function (n) { f(n).addEventListener("input", update); });
+})();
+</script>
+{% endblock %}

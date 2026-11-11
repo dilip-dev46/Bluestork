@@ -1,0 +1,143 @@
+{% if form.non_field_errors %}
+<ul class="errorlist">
+    {% for e in form.non_field_errors %}
+        <li>{{ e }}</li>
+    {% endfor %}
+</ul>
+<div class="spacer"></div>
+{% endif %}
+
+{% for f in form %}
+
+<div class="field{% if f.field.widget.input_type == 'checkbox' %} check{% endif %}">
+
+    {% if f.field.widget.input_type == 'checkbox' %}
+
+        <label>{{ f }} <span>{{ f.label }}</span></label>
+
+    {% else %}
+
+        {{ f.label_tag }}
+
+        {% if f.field.widget.input_type == 'password' %}
+
+            <div class="password-wrapper">
+                {{ f }}
+
+                <button
+                    type="button"
+                    class="password-toggle"
+                    aria-label="Show password"
+                    aria-pressed="false">
+
+                    <svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 5C6.5 5 2 9.5 1 12c1 2.5 5.5 7 11 7s10-4.5 11-7c-1-2.5-5.5-7-11-7Zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10Zm0-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                    </svg>
+
+                    <svg class="eye-closed" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="m3.3 2 18.7 18.7-1.3 1.3-3.1-3.1A12.8 12.8 0 0 1 12 20C6.5 20 2 15.5 1 13c.6-1.5 2.2-3.5 4.5-5L2 3.3 3.3 2ZM12 6c5.5 0 10 4.5 11 7-.5 1.3-1.7 3-3.5 4.4l-3-3A5 5 0 0 0 9.6 7l-1-1A12.6 12.6 0 0 1 12 6Zm0 3a4 4 0 0 1 4 4c0 .4-.1.8-.2 1.2l-5-5C11.2 9.1 11.6 9 12 9Z"/>
+                    </svg>
+
+                </button>
+            </div>
+
+        {% else %}
+
+            {{ f }}
+
+        {% endif %}
+
+    {% endif %}
+
+    {% if f.help_text %}
+        <span class="helptext">{{ f.help_text|safe }}</span>
+    {% endif %}
+
+    {{ f.errors }}
+
+</div>
+
+{% endfor %}
+
+
+<style>
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.password-wrapper input {
+    width: 100%;
+    box-sizing: border-box;
+    padding-right: 48px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #111827;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.password-toggle:hover {
+    background: #dbeafe;
+}
+
+.password-toggle svg {
+    width: 21px;
+    height: 21px;
+    fill: currentColor;
+}
+
+.password-toggle .eye-closed {
+    display: none;
+}
+
+.password-toggle.is-visible .eye-open {
+    display: none;
+}
+
+.password-toggle.is-visible .eye-closed {
+    display: block;
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    document.querySelectorAll(".password-toggle").forEach(button => {
+
+        button.addEventListener("click", function () {
+
+            const wrapper = button.closest(".password-wrapper");
+            const input = wrapper.querySelector("input");
+
+            const showPassword = input.type === "password";
+
+            input.type = showPassword ? "text" : "password";
+
+            button.classList.toggle("is-visible", showPassword);
+
+            button.setAttribute(
+                "aria-label",
+                showPassword ? "Hide password" : "Show password"
+            );
+
+            button.setAttribute("aria-pressed", showPassword);
+
+        });
+
+    });
+
+});
+</script>

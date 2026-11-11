@@ -1,0 +1,11 @@
+<form method="post" action="{% url 'assign' p.code %}" class="row" style="margin-top:10px">
+  {% csrf_token %}
+  <select name="partner" required style="flex:1;min-width:200px">
+    <option value="">Choose partner...</option>
+    {% for score, note, prof in cands %}
+      <option value="{{ prof.user.pk }}">{{ prof.user.first_name|default:prof.user.username }} - {{ prof.get_vehicle_type_display|default:"vehicle ?" }} - {{ note }}</option>
+    {% endfor %}
+  </select>
+  <button class="btn small" type="submit">{{ label|default:"Assign" }}</button>
+</form>
+{% if not cands %}<p class="muted">No available partner has enough capacity right now.</p>{% endif %}

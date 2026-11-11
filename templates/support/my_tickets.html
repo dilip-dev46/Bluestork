@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}My Support Tickets - Bluestork{% endblock %}
+
+{% block content %}
+
+<style>
+.tickets-container {
+    max-width: 900px;
+    margin: 25px auto;
+    padding: 16px;
+    color: var(--text, #17345c);
+}
+
+.tickets-card {
+    background: var(--card, #fff);
+    border: 1px solid var(--border, #dce8f5);
+    border-radius: 15px;
+    padding: 22px;
+    margin-bottom: 18px;
+}
+
+.ticket-row {
+    padding: 17px 0;
+    border-bottom: 1px solid var(--border, #dce8f5);
+}
+
+.ticket-row:last-child {
+    border-bottom: none;
+}
+
+.ticket-row h3 {
+    margin: 0 0 8px;
+    font-size: 17px;
+}
+
+.ticket-row p {
+    color: var(--muted, #64748b);
+    margin: 6px 0;
+    overflow-wrap: anywhere;
+}
+
+.ticket-status {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #eef6ff;
+    color: #176bc1;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.ticket-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: #176bc1;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 18px;
+    color: #176bc1;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+@media (max-width: 600px) {
+    .tickets-container {
+        padding: 10px;
+        margin-top: 12px;
+    }
+
+    .tickets-card {
+        padding: 16px;
+    }
+}
+</style>
+
+<div class="tickets-container">
+
+    <a href="{% url 'support:help' %}" class="back-link">
+        ← Back to Help & Support
+    </a>
+
+    <div class="tickets-card">
+
+        <h1>My Support Tickets</h1>
+
+        <p>Track all your submitted support requests.</p>
+
+        {% for ticket in tickets %}
+
+        <div class="ticket-row">
+
+            <h3>Ticket #{{ ticket.id }} — {{ ticket.subject }}</h3>
+
+            <p>
+                Category: {{ ticket.get_category_display }}
+            </p>
+
+            <p>
+                Submitted: {{ ticket.created_at|date:"d M Y, h:i A" }}
+            </p>
+
+            <span class="ticket-status">
+                {{ ticket.get_status_display }}
+            </span>
+
+            <br>
+
+            <a
+                href="{% url 'support:ticket_detail' ticket.id %}"
+                class="ticket-link"
+            >
+                View Ticket Details →
+            </a>
+
+        </div>
+
+        {% empty %}
+
+        <p>You haven't submitted any support tickets yet.</p>
+
+        <a href="{% url 'support:help' %}" class="ticket-link">
+            Submit a Support Request →
+        </a>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

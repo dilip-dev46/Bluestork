@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}My parcels - Bluestork{% endblock %}
+{% block content %}
+<div class="row between">
+  <h1>My parcels</h1>
+  <a class="btn" href="{% url 'parcel_new' %}">+ New parcel</a>
+</div>
+<div class="spacer"></div>
+{% if parcels %}
+<div class="grid cols-2">{% for p in parcels %}{% include "_parcel_card.html" %}{% endfor %}</div>
+{% else %}
+<div class="card"><p>You have not sent any parcel yet.</p><a class="btn" href="{% url 'parcel_new' %}">Send your first parcel</a></div>
+{% endif %}
+{% endblock %}

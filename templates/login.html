@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}{{ role_label }} login - Bluestork{% endblock %}
+
+{% block content %}
+
+<div class="card" style="max-width:440px;margin:0 auto">
+
+    <h1>{{ role_label }} login</h1>
+    <p class="muted">Enter your ID and password.</p>
+
+    <form method="post">
+        {% csrf_token %}
+
+        {% include "_form.html" %}
+
+        <button class="btn block" type="submit">Log in</button>
+    </form>
+
+    {% if role == 'assigner' %}
+        <p class="muted" style="margin-top:14px">
+            Assigner accounts are created by the Bluestork admin only.
+        </p>
+    {% else %}
+        <p style="margin-top:14px">
+            New here?
+            <a href="{% if role == 'customer' %}{% url 'customer_signup' %}{% else %}{% url 'partner_signup' %}{% endif %}">
+                Create an account
+            </a>
+        </p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

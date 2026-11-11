@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile | Bluestork{% endblock %}
+
+{% block content %}
+
+<div class="profile-page">
+
+    <div class="profile-heading">
+        <h1>My Profile</h1>
+        <p>View and update your Bluestork account details.</p>
+    </div>
+
+    <div class="profile-card">
+
+        <div class="profile-card-header">
+            <div class="profile-avatar">
+                {{ request.user.first_name|default:request.user.username|first|upper }}
+            </div>
+
+            <div>
+                <h2>{{ request.user.first_name|default:request.user.username }}</h2>
+                <span class="profile-role">
+                    {{ profile.role|title }}
+                </span>
+            </div>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <h3>Personal Information</h3>
+
+            {% for field in user_form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+
+                    {{ field }}
+
+                    {% for error in field.errors %}
+                        <small class="field-error">{{ error }}</small>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            {% if profile_form %}
+                <h3>Contact Information</h3>
+
+                {% for field in profile_form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                        </label>
+
+                        {{ field }}
+
+                        {% for error in field.errors %}
+                            <small class="field-error">{{ error }}</small>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if partner_form %}
+                <h3>Partner Information</h3>
+
+                {% for field in partner_form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                        </label>
+
+                        {{ field }}
+
+                        {% for error in field.errors %}
+                            <small class="field-error">{{ error }}</small>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <button type="submit" class="profile-save-btn">
+                Save Changes
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

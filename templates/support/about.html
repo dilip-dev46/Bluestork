@@ -1,0 +1,331 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Why Bluestork?{% endblock %}
+
+{% block content %}
+
+<style>
+.about-container {
+    max-width: 1050px;
+    margin: 25px auto;
+    padding: 16px;
+    color: var(--text, #17345c);
+}
+
+.about-hero {
+    background: linear-gradient(135deg, #eaf4ff, #ffffff);
+    border: 1px solid #d5e8ff;
+    border-radius: 20px;
+    padding: 45px 25px;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.about-logo {
+    margin-bottom: 15px;
+}
+
+.about-logo img {
+    width: 180px;
+    max-width: 65%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    object-fit: contain;
+}
+
+.about-hero h1 {
+    color: #0b3a8c;
+    font-size: clamp(28px, 5vw, 42px);
+    margin-bottom: 12px;
+}
+
+.about-hero p {
+    max-width: 650px;
+    margin: auto;
+    line-height: 1.8;
+    color: #526b87;
+}
+
+.about-card {
+    background: var(--card, #ffffff);
+    border: 1px solid var(--border, #dce8f5);
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 20px;
+}
+
+.about-card h2 {
+    color: #0b3a8c;
+    font-size: 22px;
+    margin-bottom: 13px;
+}
+
+.about-card p {
+    line-height: 1.8;
+    color: var(--muted, #64748b);
+    margin-bottom: 10px;
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.about-feature {
+    background: var(--card, #ffffff);
+    border: 1px solid var(--border, #dce8f5);
+    border-radius: 14px;
+    padding: 22px;
+    min-width: 0;
+}
+
+.about-feature h3 {
+    color: #0b3a8c;
+    margin-bottom: 10px;
+}
+
+.about-feature p {
+    color: var(--muted, #64748b);
+    line-height: 1.7;
+    margin: 0;
+}
+
+.about-area {
+    background: #eef6ff;
+    border: 1px solid #d5e8ff;
+    border-radius: 16px;
+    padding: 24px;
+    color: #17345c;
+    text-align: center;
+}
+
+.about-area h2 {
+    color: #0b3a8c;
+}
+
+/* Bluestork fairy tale */
+.about-story {
+    background: linear-gradient(135deg, #eaf4ff, #ffffff);
+    border: 1px solid #d5e8ff;
+    border-radius: 16px;
+    padding: 22px 25px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.about-story p {
+    color: #17345c;
+    line-height: 1.8;
+    margin: 5px 0;
+}
+
+@media (max-width: 650px) {
+    .about-container {
+        padding: 10px;
+        margin-top: 12px;
+    }
+
+    .about-hero {
+        padding: 30px 17px;
+        border-radius: 14px;
+    }
+
+    .about-logo img {
+        width: 145px;
+    }
+
+    .about-card,
+    .about-story {
+        padding: 18px;
+    }
+
+    .about-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .about-feature {
+        padding: 18px;
+    }
+}
+</style>
+
+
+<div class="about-container">
+
+    <!-- HERO -->
+    <section class="about-hero">
+
+        <div class="about-logo">
+            <img
+                src="{% static 'images/bluestork-logo.png' %}"
+                alt="Bluestork - Stork carrying a parcel"
+            >
+        </div>
+
+        <h1>Why Bluestork?</h1>
+
+        <p>
+            A smarter way to connect people, parcels and everyday journeys.
+            Bluestork brings customers and travellers together to make
+            parcel delivery more convenient.
+        </p>
+
+    </section>
+
+
+    <!-- BLUESTORK FAIRY TALE -->
+    <section class="about-story">
+
+        <p>
+            Once upon a time, a  stork carried babies across distant places,
+            bringing happiness from one person to another.
+        </p>
+
+        <p>
+            Inspired by this little fairy tale, Bluestork connects people
+            and travellers to deliver parcels through everyday journeys.
+        </p>
+
+        <p>
+            <strong>Every journey can deliver something meaningful. </strong>
+        </p>
+
+    </section>
+
+
+    <!-- WHO WE ARE -->
+    <section class="about-card">
+
+        <h2>Who We Are</h2>
+
+        <p>
+            Bluestork is a community-driven parcel delivery platform
+            designed to connect people who need to send parcels with
+            travellers who are already travelling along suitable routes.
+        </p>
+
+        <p>
+            Instead of relying only on traditional delivery networks,
+            Bluestork aims to make use of available travel journeys
+            to support parcel transportation.
+        </p>
+
+    </section>
+
+
+    <!-- MISSION AND VISION -->
+    <div class="about-grid">
+
+        <section class="about-feature">
+
+            <h3>Our Mission</h3>
+
+            <p>
+                To make parcel delivery more accessible by connecting
+                customers with available travellers through a simple
+                and convenient platform.
+            </p>
+
+        </section>
+
+
+        <section class="about-feature">
+
+            <h3>Our Vision</h3>
+
+            <p>
+                To build a connected delivery community where everyday
+                journeys can create useful delivery opportunities.
+            </p>
+
+        </section>
+
+    </div>
+
+
+    <!-- HOW IT WORKS -->
+    <section class="about-card">
+
+        <h2>How Bluestork Works</h2>
+
+        <p><strong>1. Customers:</strong> Create a parcel request with pickup and delivery details.</p>
+
+        <p><strong>2. Travel Partners:</strong> Share their travel routes and availability.</p>
+
+        <p><strong>3. Assigner:</strong> Reviews suitable routes and assigns parcels to partners.</p>
+
+        <p><strong>4. Delivery:</strong> The partner picks up and delivers the parcel while the platform tracks its progress.</p>
+
+    </section>
+
+
+    <!-- PLATFORM VALUES -->
+    <section class="about-card">
+
+        <h2>What We Focus On</h2>
+
+        <div class="about-grid">
+
+            <div class="about-feature">
+                <h3>Convenience</h3>
+                <p>Simple parcel requests and easy-to-use dashboards.</p>
+            </div>
+
+            <div class="about-feature">
+                <h3>Community</h3>
+                <p>Connecting customers with people already travelling.</p>
+            </div>
+
+            <div class="about-feature">
+                <h3>Transparency</h3>
+                <p>Clear parcel status and delivery progress.</p>
+            </div>
+
+            <div class="about-feature">
+                <h3>Opportunity</h3>
+                <p>Helping travellers earn through suitable parcel delivery journeys.</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- SERVICE AREA -->
+    <section class="about-area">
+
+        <h2>Our Service Area</h2>
+
+        <p>
+            Bluestork currently focuses on connecting destinations
+            across Tamil Nadu, with the goal of expanding to more
+            regions in the future.
+        </p>
+
+    </section>
+
+
+    <!-- CONTACT -->
+    <section class="about-card" style="text-align:center; margin-top:20px;">
+
+        <h2>Have Questions?</h2>
+
+        <p>
+            We're happy to help you with your Bluestork experience.
+        </p>
+
+        <a href="{% url 'support:help' %}"
+           style="display:inline-block; background:#1668e3; color:white;
+           padding:12px 22px; border-radius:9px; text-decoration:none;
+           font-weight:600;">
+            Contact Support
+        </a>
+
+    </section>
+
+</div>
+
+{% endblock %}

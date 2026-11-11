@@ -1,0 +1,426 @@
+{% extends "base.html" %}
+
+{% block title %}Help & Contact Support - Bluestork{% endblock %}
+
+{% block content %}
+
+<style>
+.support-container {
+    max-width: 1000px;
+    margin: 25px auto;
+    padding: 16px;
+    color: var(--text, #17345c);
+}
+
+.support-heading {
+    margin-bottom: 25px;
+}
+
+.support-heading h1 {
+    font-size: clamp(24px, 5vw, 32px);
+    margin-bottom: 8px;
+}
+
+.support-heading p {
+    color: var(--muted, #64748b);
+}
+
+.support-card {
+    background: var(--card, #ffffff);
+    border: 1px solid var(--border, #dce8f5);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 22px;
+    box-shadow: 0 4px 16px rgba(20, 70, 130, 0.05);
+}
+
+.support-card h2 {
+    font-size: 21px;
+    margin-bottom: 16px;
+}
+
+.support-form .field {
+    margin-bottom: 18px;
+}
+
+.support-form label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.support-form input,
+.support-form select,
+.support-form textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px;
+    border: 1px solid var(--border, #cbdcf0);
+    border-radius: 9px;
+    background: var(--bg, #ffffff);
+    color: var(--text, #17345c);
+    font: inherit;
+    outline: none;
+}
+
+.support-form input:focus,
+.support-form select:focus,
+.support-form textarea:focus {
+    border-color: #1674d1;
+    box-shadow: 0 0 0 3px rgba(22, 116, 209, 0.12);
+}
+
+.support-form textarea {
+    resize: vertical;
+    min-height: 140px;
+}
+
+.word-counter {
+    text-align: right;
+    font-size: 13px;
+    color: var(--muted, #64748b);
+    margin-top: 6px;
+}
+
+.word-counter.limit-reached {
+    color: #c62828;
+}
+
+.support-btn {
+    display: inline-block;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: #176bc1;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.support-btn:hover {
+    background: #10559d;
+}
+
+.support-contact {
+    background: #eef6ff;
+    border: 1px solid #d5e8ff;
+    padding: 18px;
+    border-radius: 12px;
+    margin-bottom: 22px;
+    color: #17345c;
+}
+
+.support-contact p {
+    margin: 6px 0;
+}
+
+.faq-item {
+    border-bottom: 1px solid var(--border, #dce8f5);
+    padding: 15px 0;
+}
+
+.faq-item:last-child {
+    border-bottom: none;
+}
+
+.faq-item summary {
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.faq-item p {
+    color: var(--muted, #64748b);
+    line-height: 1.6;
+    margin-top: 10px;
+}
+
+.ticket-item {
+    padding: 15px;
+    border: 1px solid var(--border, #dce8f5);
+    border-radius: 10px;
+    margin-bottom: 12px;
+}
+
+.ticket-item a {
+    color: #176bc1;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.ticket-status {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 20px;
+    background: #eef6ff;
+    color: #176bc1;
+    margin-top: 8px;
+}
+
+.support-messages {
+    margin-bottom: 15px;
+}
+
+.support-messages p {
+    padding: 12px;
+    border-radius: 8px;
+    background: #eef6ff;
+    color: #174d82;
+}
+
+@media (max-width: 600px) {
+    .support-container {
+        padding: 10px;
+        margin-top: 12px;
+    }
+
+    .support-card {
+        padding: 17px;
+        border-radius: 12px;
+    }
+
+    .support-card h2 {
+        font-size: 19px;
+    }
+
+    .support-form input,
+    .support-form select,
+    .support-form textarea {
+        font-size: 16px;
+    }
+}
+</style>
+
+
+<div class="support-container">
+
+    <div class="support-heading">
+        <h1>Help & Contact Support</h1>
+        <p>We're here to help you with your Bluestork experience.</p>
+    </div>
+
+
+    {% if messages %}
+    <div class="support-messages">
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+
+    <!-- CONTACT INFORMATION -->
+    <div class="support-contact">
+        <h2>Need Help?</h2>
+        <p>Have an issue with your account, parcel or payment?</p>
+        <p>Submit a support request using the form below.</p>
+        <p><strong>Support email:</strong> To be announced</p>
+    </div>
+
+
+    <!-- SUPPORT FORM -->
+    <div class="support-card">
+
+        <h2>Submit a Support Request</h2>
+
+        <form
+            method="POST"
+            action="{% url 'support:submit' %}"
+            enctype="multipart/form-data"
+            class="support-form"
+        >
+
+            {% csrf_token %}
+
+            <div class="field">
+                <label for="{{ form.subject.id_for_label }}">
+                    Issue Title *
+                </label>
+                {{ form.subject }}
+                {{ form.subject.errors }}
+            </div>
+
+            <div class="field">
+                <label for="{{ form.category.id_for_label }}">
+                    Select Category *
+                </label>
+                {{ form.category }}
+                {{ form.category.errors }}
+            </div>
+
+            <div class="field">
+                <label for="{{ form.description.id_for_label }}">
+                    Describe Your Issue *
+                </label>
+
+                {{ form.description }}
+
+                <div class="word-counter" id="wordCounter">
+                    0 / 500 words
+                </div>
+
+                {{ form.description.errors }}
+            </div>
+
+            <div class="field">
+                <label for="{{ form.attachment.id_for_label }}">
+                    Upload Picture (Optional)
+                </label>
+
+                {{ form.attachment }}
+
+                <small>JPG, PNG or WEBP. Maximum size: 5 MB.</small>
+
+                {{ form.attachment.errors }}
+            </div>
+
+            <button type="submit" class="support-btn">
+                Submit Request
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- RECENT TICKETS -->
+    <div class="support-card">
+
+        <h2>My Recent Support Requests</h2>
+
+        {% for ticket in tickets %}
+
+        <div class="ticket-item">
+
+            <strong>Ticket #{{ ticket.id }}</strong>
+
+            <p>{{ ticket.subject }}</p>
+
+            <span class="ticket-status">
+                {{ ticket.get_status_display }}
+            </span>
+
+            <br><br>
+
+            <a href="{% url 'support:ticket_detail' ticket.id %}">
+                View Details →
+            </a>
+
+        </div>
+
+        {% empty %}
+
+        <p>You haven't submitted any support requests yet.</p>
+
+        {% endfor %}
+
+        <a href="{% url 'support:my_tickets' %}">
+            View All My Tickets →
+        </a>
+
+    </div>
+
+
+    <!-- FAQ SECTION -->
+    <div class="support-card">
+
+        <h2>Frequently Asked Questions</h2>
+
+        <details class="faq-item">
+            <summary>How does Bluestork work?</summary>
+            <p>
+                Customers create parcel requests. Available travel partners
+                can carry parcels along their travel routes. An assigner
+                matches suitable parcels with partners.
+            </p>
+        </details>
+
+        <details class="faq-item">
+            <summary>How can I track my parcel?</summary>
+            <p>
+                Log in to your customer account and open your parcel details
+                to check its current delivery status.
+            </p>
+        </details>
+
+        <details class="faq-item">
+            <summary>What if my parcel is delayed?</summary>
+            <p>
+                Submit a support request under Parcel & Delivery and
+                describe the delay.
+            </p>
+        </details>
+
+        <details class="faq-item">
+            <summary>How do travel partners receive payouts?</summary>
+            <p>
+                Partner payouts are handled manually through the
+                Bluestork administration process.
+            </p>
+        </details>
+
+        <details class="faq-item">
+            <summary>How can I report a payment issue?</summary>
+            <p>
+                Select Payment Issues when submitting your support request.
+                Include relevant payment details without sharing passwords
+                or sensitive banking credentials.
+            </p>
+        </details>
+
+        <details class="faq-item">
+            <summary>Can I contact Bluestork about account problems?</summary>
+            <p>
+                Yes. Select Account Issues and explain your problem
+                through the support form.
+            </p>
+        </details>
+
+    </div>
+
+</div>
+
+
+<!-- 500 WORD COUNTER -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const textarea = document.getElementById(
+        "{{ form.description.id_for_label }}"
+    );
+
+    const counter = document.getElementById("wordCounter");
+
+    if (!textarea || !counter) return;
+
+    function updateWordCount() {
+
+        const words = textarea.value.trim()
+            ? textarea.value.trim().split(/\s+/).length
+            : 0;
+
+        counter.textContent = words + " / 500 words";
+
+        counter.classList.toggle(
+            "limit-reached",
+            words > 500
+        );
+
+        textarea.setCustomValidity(
+            words > 500
+                ? "Maximum 500 words allowed."
+                : ""
+        );
+    }
+
+    textarea.addEventListener("input", updateWordCount);
+
+    updateWordCount();
+
+});
+</script>
+
+{% endblock %}

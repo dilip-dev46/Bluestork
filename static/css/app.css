@@ -1,0 +1,1017 @@
+/* ---------- themes ---------- */
+:root, :root[data-theme="light"] {
+  --bg:#f3f6fb; --card:#ffffff; --text:#0f1b2d; --muted:#5b6b82; --border:#e1e8f2;
+  --primary:#1668e3; --primary-text:#ffffff; --soft:#e8f0fd; --ok:#16a34a; --warn:#d97706; --bad:#dc2626;
+  --shadow:0 2px 10px rgba(15,27,45,.07);
+}
+
+:root[data-theme="dark"] {
+  --bg:#0b1220; --card:#131d31; --text:#e7edf7; --muted:#92a1b8; --border:#24324d;
+  --primary:#4b8dff; --primary-text:#06101f; --soft:#16264a; --ok:#34d399; --warn:#fbbf24; --bad:#f87171;
+  --shadow:0 2px 12px rgba(0,0,0,.4);
+}
+
+:root[data-theme="ocean"] {
+  --bg:#e6f5f6; --card:#ffffff; --text:#062f38; --muted:#4f7480; --border:#cfe6e9;
+  --primary:#0d9488; --primary-text:#ffffff; --soft:#d7f1ee; --ok:#15803d; --warn:#b45309; --bad:#b91c1c;
+  --shadow:0 2px 10px rgba(6,47,56,.08);
+}
+
+/* ---------- base ---------- */
+* {
+  box-sizing:border-box;
+}
+
+html {
+  -webkit-text-size-adjust:100%;
+}
+
+body {
+  margin:0;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.45;
+}
+
+a {
+  color:var(--primary);
+  text-decoration:none;
+}
+
+h1,h2,h3 {
+  margin:.2em 0 .5em;
+  line-height:1.2;
+}
+
+h1 { font-size:1.55rem; }
+h2 { font-size:1.2rem; }
+h3 { font-size:1.05rem; }
+
+.muted {
+  color:var(--muted);
+  font-size:.92rem;
+}
+
+.container {
+  max-width:980px;
+  margin:0 auto;
+  padding:16px;
+}
+
+.grid {
+  display:grid;
+  gap:12px;
+}
+
+@media (min-width:640px) {
+  .grid.cols-2 { grid-template-columns:1fr 1fr; }
+  .grid.cols-3 { grid-template-columns:repeat(3,1fr); }
+}
+
+.row {
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+.row.between {
+  justify-content:space-between;
+}
+
+.spacer {
+  height:14px;
+}
+
+/* ---------- top bar & drawer ---------- */
+.topbar {
+  position:sticky;
+  top:0;
+  z-index:30;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:10px 14px;
+  background:var(--card);
+  border-bottom:1px solid var(--border);
+  box-shadow:var(--shadow);
+}
+
+.menu-btn {
+  width:44px;
+  height:44px;
+  border:1px solid var(--border);
+  background:var(--bg);
+  border-radius:12px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:5px;
+  cursor:pointer;
+}
+
+.menu-btn span {
+  display:block;
+  width:20px;
+  height:2.5px;
+  border-radius:2px;
+  background:var(--text);
+}
+
+.brand {
+  font-weight:800;
+  font-size:1.2rem;
+  color:var(--text);
+  letter-spacing:.2px;
+}
+
+.brand b {
+  color:var(--primary);
+}
+
+.topbar .right {
+  margin-left:auto;
+  font-size:.85rem;
+}
+
+.overlay {
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.45);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .2s;
+  z-index:40;
+}
+
+.drawer {
+  position:fixed;
+  top:0;
+  left:0;
+  bottom:0;
+  width:min(82vw,320px);
+  background:var(--card);
+  z-index:50;
+  transform:translateX(-102%);
+  transition:transform .22s ease;
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  overflow-y:auto;
+  box-shadow:var(--shadow);
+}
+
+body.menu-open .drawer {
+  transform:none;
+}
+
+body.menu-open .overlay {
+  opacity:1;
+  pointer-events:auto;
+}
+
+.drawer h3 {
+  margin:0 0 8px;
+}
+
+.drawer a,
+.drawer button.link {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:13px 12px;
+  border-radius:12px;
+  color:var(--text);
+  font-weight:600;
+  background:none;
+  border:0;
+  width:100%;
+  font-size:1rem;
+  text-align:left;
+  cursor:pointer;
+  font-family:inherit;
+}
+
+.drawer a:hover,
+.drawer button.link:hover,
+.drawer a.active {
+  background:var(--soft);
+}
+
+.drawer hr {
+  border:0;
+  border-top:1px solid var(--border);
+  margin:8px 0;
+  width:100%;
+}
+
+.drawer .ico {
+  width:26px;
+  text-align:center;
+  font-size:1.2rem;
+}
+
+/* ---------- cards, buttons, forms ---------- */
+.card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:16px;
+  box-shadow:var(--shadow);
+}
+
+.card.link {
+  display:block;
+  color:inherit;
+}
+
+.card.link:hover {
+  border-color:var(--primary);
+}
+
+.btn {
+  display:inline-block;
+  padding:12px 18px;
+  border-radius:12px;
+  border:1px solid var(--primary);
+  background:var(--primary);
+  color:var(--primary-text);
+  font-weight:700;
+  font-size:1rem;
+  cursor:pointer;
+  font-family:inherit;
+  text-align:center;
+}
+
+.btn.ghost {
+  background:transparent;
+  color:var(--primary);
+}
+
+.btn.danger {
+  background:var(--bad);
+  border-color:var(--bad);
+  color:#fff;
+}
+
+.btn.small {
+  padding:8px 12px;
+  font-size:.9rem;
+  border-radius:10px;
+}
+
+.btn.block {
+  display:block;
+  width:100%;
+}
+
+.field {
+  margin-bottom:12px;
+}
+
+.field label {
+  display:block;
+  font-weight:600;
+  margin-bottom:4px;
+  font-size:.92rem;
+}
+
+input[type=text],
+input[type=password],
+input[type=number],
+input[type=date],
+input[type=tel],
+select,
+textarea {
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:var(--bg);
+  color:var(--text);
+  font-size:1rem;
+  font-family:inherit;
+}
+
+input[type=checkbox] {
+  width:20px;
+  height:20px;
+  vertical-align:middle;
+  margin-right:8px;
+}
+
+.field.check label {
+  display:flex;
+  align-items:flex-start;
+  font-weight:500;
+}
+
+.errorlist {
+  list-style:none;
+  margin:4px 0 0;
+  padding:0;
+  color:var(--bad);
+  font-size:.88rem;
+}
+
+.helptext {
+  color:var(--muted);
+  font-size:.8rem;
+  display:block;
+  margin-top:3px;
+}
+
+.messages {
+  list-style:none;
+  margin:0 0 12px;
+  padding:0;
+}
+
+.messages li {
+  padding:12px 14px;
+  border-radius:12px;
+  margin-bottom:8px;
+  background:var(--soft);
+  border:1px solid var(--border);
+  font-weight:600;
+}
+
+.messages li.success {
+  border-color:var(--ok);
+}
+
+.messages li.error {
+  border-color:var(--bad);
+  color:var(--bad);
+}
+
+/* ---------- parcel bits ---------- */
+.badge {
+  display:inline-block;
+  padding:3px 10px;
+  border-radius:99px;
+  font-size:.78rem;
+  font-weight:700;
+  background:var(--soft);
+  color:var(--primary);
+}
+
+.badge.created {
+  color:var(--warn);
+}
+
+.badge.delivered,
+.badge.partner_paid {
+  color:var(--ok);
+}
+
+.route {
+  font-weight:700;
+  font-size:1.05rem;
+}
+
+.price {
+  font-weight:800;
+  font-size:1.1rem;
+}
+
+.steps {
+  list-style:none;
+  margin:0;
+  padding:0;
+}
+
+.steps li {
+  position:relative;
+  padding:6px 0 6px 30px;
+  color:var(--muted);
+}
+
+.steps li::before {
+  content:"";
+  position:absolute;
+  left:4px;
+  top:11px;
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  border:2px solid var(--border);
+  background:var(--card);
+}
+
+.steps li.done {
+  color:var(--text);
+}
+
+.steps li.done::before {
+  background:var(--ok);
+  border-color:var(--ok);
+}
+
+.steps li.current {
+  color:var(--primary);
+  font-weight:700;
+}
+
+.steps li.current::before {
+  border-color:var(--primary);
+  background:var(--primary);
+}
+
+.otp {
+  font-size:1.8rem;
+  letter-spacing:6px;
+  font-weight:800;
+  background:var(--soft);
+  padding:10px 14px;
+  border-radius:12px;
+  display:inline-block;
+}
+
+#map {
+  height:320px;
+  border-radius:14px;
+  border:1px solid var(--border);
+  z-index:1;
+}
+
+.kv {
+  display:grid;
+  grid-template-columns:120px 1fr;
+  gap:6px 10px;
+  font-size:.95rem;
+}
+
+.kv dt {
+  color:var(--muted);
+}
+
+.kv dd {
+  margin:0;
+  font-weight:600;
+  word-break:break-word;
+}
+
+.stat {
+  text-align:center;
+}
+
+.stat b {
+  display:block;
+  font-size:1.5rem;
+}
+
+/* ---------- hero ---------- */
+.hero {
+  padding:26px 18px;
+  border-radius:20px;
+  background:linear-gradient(135deg,var(--primary),#38bdf8);
+  color:#fff;
+}
+
+.hero h1 {
+  font-size:2rem;
+  margin:0 0 6px;
+}
+
+.hero p {
+  margin:0 0 14px;
+  opacity:.95;
+}
+
+.hero .btn {
+  background:#fff;
+  color:#0b3a8c;
+  border-color:#fff;
+}
+
+.theme-opt {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px;
+  border:2px solid var(--border);
+  border-radius:14px;
+  cursor:pointer;
+  background:var(--card);
+  width:100%;
+  font-size:1rem;
+  font-family:inherit;
+  color:var(--text);
+  font-weight:600;
+}
+
+.theme-opt.on {
+  border-color:var(--primary);
+}
+
+.swatch {
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  border:1px solid var(--border);
+}
+
+/* ---------- back button ---------- */
+.back-btn {
+  width:44px;
+  height:44px;
+  border:1px solid var(--border);
+  background:var(--bg);
+  color:var(--text);
+  border-radius:12px;
+  font-size:1.5rem;
+  line-height:1;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:inherit;
+}
+
+.back-btn:hover {
+  background:var(--soft);
+}
+
+/* ==================================================
+   BLUESTORK LANDING PAGE
+================================================== */
+
+.landing {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    isolation: isolate;
+    overflow-x: hidden;
+    background: #f3f8ff;
+    color: #0b3a8c;
+}
+
+/* Stork-only watermark background */
+.landing::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("/static/images/bluestork-stork-watermark.png");
+    background-repeat: no-repeat;
+    background-position: center 35%;
+    background-size: min(85%, 850px) auto;
+    opacity: 0.10;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Keep page content above the watermark */
+.landing .wrap,
+.landing .foot {
+    position: relative;
+    z-index: 1;
+}
+
+/* Main content */
+.landing .wrap {
+    flex: 1;
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 28px 22px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 22px;
+    text-align: center;
+}
+
+/* Brand */
+.landing .logo {
+    font-size: 2.6rem;
+    font-weight: 900;
+    letter-spacing: .5px;
+    color: #0b3a8c;
+}
+
+.landing .logo b {
+    color: #1668e3;
+}
+
+/* Main heading */
+.landing h1 {
+    font-size: 1.65rem;
+    margin: 0;
+    color: #0b3a8c;
+}
+
+/* Description */
+.landing .sub {
+    margin: 0;
+    color: #526780;
+}
+
+/* Feature chips */
+.landing .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.landing .chip {
+    background: rgba(255, 255, 255, .92);
+    border: 1px solid #c9ddf7;
+    color: #1668e3;
+    padding: 7px 13px;
+    border-radius: 99px;
+    font-size: .88rem;
+    font-weight: 600;
+}
+
+/* Get started button */
+.landing .go {
+    display: block;
+    background: #1668e3;
+    color: #fff;
+    font-weight: 800;
+    font-size: 1.1rem;
+    padding: 15px 20px;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(22, 104, 227, .18);
+}
+
+/* Role buttons */
+.landing .roles {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.landing .roles a {
+    color: #1668e3;
+    border: 1px solid #a9c9f5;
+    background: rgba(255, 255, 255, .92);
+    padding: 9px 14px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: .9rem;
+}
+
+/* Footer */
+.landing .foot {
+    text-align: center;
+    font-size: .8rem;
+    color: #526780;
+    padding: 12px;
+}
+
+/* Mobile responsive */
+@media (max-width: 639px) {
+    .landing::before {
+        background-size: 105% auto;
+        background-position: center 35%;
+        opacity: .08;
+    }
+
+    .landing .wrap {
+        padding: 24px 18px;
+        gap: 18px;
+    }
+
+    .landing .logo {
+        font-size: 2.2rem;
+    }
+
+    .landing h1 {
+        font-size: 1.4rem;
+    }
+
+    .landing .roles {
+        gap: 10px;
+    }
+
+    .landing .roles a {
+        padding: 10px 12px;
+    }
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .landing * {
+        animation: none !important;
+    }
+}
+
+
+/* ==================================================
+   BLUESTORK PROFILE PAGE
+================================================== */
+
+.profile-page {
+    max-width: 750px;
+    margin: 30px auto;
+    padding: 15px;
+}
+
+.profile-heading {
+    margin-bottom: 25px;
+}
+
+.profile-heading h1 {
+    color: var(--primary);
+}
+
+.profile-heading p {
+    color: var(--muted);
+}
+
+.profile-card {
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: var(--shadow);
+}
+
+.profile-card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-bottom: 20px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--border);
+}
+
+.profile-avatar {
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--primary);
+    color: var(--primary-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.profile-card-header h2 {
+    color: var(--text);
+    margin: 0 0 5px;
+}
+
+.profile-role {
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.profile-card h3 {
+    color: var(--primary);
+    margin: 25px 0 15px;
+}
+
+.profile-card .form-group {
+    margin-bottom: 18px;
+}
+
+.profile-card label {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--text);
+    font-weight: 600;
+}
+
+.profile-card input,
+.profile-card select,
+.profile-card textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.profile-card input:focus,
+.profile-card select:focus,
+.profile-card textarea:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+}
+
+.profile-save-btn {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px;
+    background: var(--primary);
+    color: var(--primary-text);
+    border: 1px solid var(--primary);
+    border-radius: 9px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+    text-align: center;
+}
+
+.profile-save-btn:hover {
+    opacity: .9;
+}
+
+.field-error {
+    display: block;
+    color: var(--bad);
+    margin-top: 5px;
+}
+
+
+/* ==================================================
+   TOP-RIGHT PROFILE DROPDOWN
+================================================== */
+
+.profile-menu {
+    position: relative;
+}
+
+.profile-trigger {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 12px;
+    border: 1px solid var(--border);
+    border-radius: 25px;
+    background: var(--card);
+    color: var(--text);
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.profile-avatar-small {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--primary);
+    color: var(--primary-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-arrow {
+    color: var(--primary);
+}
+
+.profile-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 220px;
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 8px;
+    box-shadow: var(--shadow);
+    z-index: 9999;
+}
+
+.profile-dropdown[hidden] {
+    display: none;
+}
+
+.profile-dropdown a,
+.profile-logout {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    text-decoration: none;
+    color: var(--text);
+    background: transparent;
+    border: none;
+    border-radius: 7px;
+    text-align: left;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.profile-dropdown a:hover,
+.profile-logout:hover {
+    background: var(--soft);
+    color: var(--primary);
+}
+
+.profile-dropdown-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 5px 0;
+}
+
+
+/* ==================================================
+   PROFILE MOBILE RESPONSIVENESS
+================================================== */
+
+@media (max-width: 600px) {
+    .profile-card {
+        padding: 18px;
+    }
+
+    .profile-name {
+        max-width: 85px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .profile-dropdown {
+        width: 200px;
+    }
+}
+/* Profile page mobile responsiveness */
+@media (max-width: 600px) {
+    .profile-page {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .profile-card {
+        width: 100%;
+        padding: 16px;
+        box-sizing: border-box;
+    }
+
+    .profile-card-header {
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .profile-card input,
+    .profile-card select,
+    .profile-card textarea {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .profile-save-btn {
+        width: 100%;
+    }
+}
+/* =========================================
+   BLUESTORK SIDEBAR ICON CONSISTENCY
+========================================= */
+
+.drawer .ico {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    flex: 0 0 40px;
+
+    border-radius: 50%;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f1f5f9;
+    color: #718096;
+
+    font-size: 1rem;
+    text-align: center;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.drawer .ico svg {
+    width: 21px;
+    height: 21px;
+    display: block;
+    fill: currentColor;
+}
+
+/* Hover effect */
+.drawer a:hover .ico,
+.drawer button.link:hover .ico {
+    background: #dbeafe;
+    color: #1668e3;
+}
+
+/* Active menu effect */
+.drawer a.active .ico {
+    background: #dbeafe;
+    color: #1668e3;
+}
